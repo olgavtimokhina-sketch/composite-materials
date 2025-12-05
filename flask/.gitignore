@@ -1,0 +1,19 @@
+# Python
+__pycache__/
+*.pyc
+venv/
+env/
+
+# Models (не загружать на GitHub!)
+models/
+saved_models/
+*.h5
+*.keras
+*.pkl
+
+# VS Code
+.vscode/
+
+# System
+.DS_Store
+Thumbs.db

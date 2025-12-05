@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Прогноз соотношения матрица-наполнитель</title>
+    <style>
+        body {
+            font-family: 'Times New Roman', Times, serif;
+            background: linear-gradient(135deg, #506f86 0%, #6e8aa0 100%);
+            color: rgb(79, 83, 90);
+            min-height: 100vh;
+            padding: 20px;
+            margin: 0;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .header-table {
+            width: 100%;
+            background-color: rgba(118, 141, 153, 0.8);
+            border: 3px solid #6f8496;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        
+        .header-table th {
+            padding: 15px;
+            text-align: center;
+        }
+        
+        .form-table {
+            width: 100%;
+            background-color: rgba(121, 145, 151, 0.9);
+            border: 3px solid #768d94;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        
+        .form-table td {
+            padding: 12px;
+            border: 1px solid #326480;
+        }
+        
+        .form-table input {
+            width: 100%;
+            padding: 8px;
+            border: 2px solid #77a6b5;
+            border-radius: 4px;
+            font-size: 20px;
+            background: #f8fff8;
+        }
+        
+        .form-table input:focus {
+            outline: none;
+            border-color: #6d94a0;
+            box-shadow: 0 0 10px rgba(184, 202, 214, 0.5);
+        }
+        
+        .submit-btn {
+            display: block;
+            margin: 20px auto;
+            background: linear-gradient(to right, #647678, #a9becb);
+            color: rgb(68, 88, 95);
+            border: none;
+            padding: 15px 40px;
+            font-size: 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bolder;
+            transition: all 0.3s;
+        }
+        
+        .submit-btn:hover {
+            background: linear-gradient(to right, #616d70, #b4c1c4);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+        
+        .result-container {
+            background: rgba(121, 145, 151, 0.9);
+            border-radius: 10px;
+            padding: 25px;
+            margin-top: 30px;
+            border: 3px solid #768d94;
+        }
+        
+        .result-container h2 {
+            color: rgb(68, 88, 95)4;
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 24px;
+        }
+        
+        .result-value {
+            background: #e8f5e9;
+            border: 2px solid #326480;
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            font-size: 22px;
+            font-weight: bolder;
+            color: rgb(68, 88, 95);
+            margin-bottom: 25px;
+        }
+        
+        .percentage-container {
+            background: #f9f9f9;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+        
+        .percentage-title {
+            font-size: 20px;
+            color: #474e51;
+            margin-bottom: 15px;
+            text-align: center;
+            font-weight: bold;
+        }
+        
+        .percentage-bars {
+            display: flex;
+            height: 50px;
+            border-radius: 5px;
+            overflow: hidden;
+            margin-bottom: 10px;
+            border: 2px solid #ddd;
+        }
+        
+        .matrix-bar {
+            background: linear-gradient(to right, #5dcde0, #55acce);
+            color: rgb(68, 88, 95);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bolder;
+            transition: width 1s ease-in-out;
+        }
+        
+        .filler-bar {
+            background: linear-gradient(to right, #879dae, #8491a4);
+            color: rgb(68, 88, 95);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bolder;
+            transition: width 1s ease-in-out;
+        }
+        
+        .percentage-labels {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 15px;
+        }
+        
+        .matrix-label, .filler-label {
+            padding: 8px 15px;
+            border-radius: 5px;
+            font-weight: bolder;
+        }
+        
+        .matrix-label {
+            background: #e8f5e9;
+            color: #0D47A1;
+        }
+        
+        .filler-label {
+            background: #e3f2fd;
+            color: #0D47A1;
+        }
+        
+        .explanation {
+            margin-top: 20px;
+            padding: 15px;
+            background: #f5f5f5;
+            border-radius: 5px;
+            border-left: 4px solid #0b4700;
+        }
+        
+        .explanation p {
+            margin: 8px 0;
+            color: #333;
+            font-size: 20px;
+        }
+        
+        .error-message {
+            background: #ffebee;
+            border: 2px solid #ff4444;
+            border-radius: 8px;
+            padding: 15px;
+            color: #c62828;
+            margin-top: 20px;
+            font-size: 20px;
+        }
+        
+        .text-white {
+            color: white !important;
+        }
+        
+        .text-center {
+            text-align: center;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+            
+            .form-table td {
+                display: block;
+                width: 100%;
+            }
+            
+            .form-table tr {
+                display: flex;
+                flex-direction: column;
+                margin-bottom: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Заголовок -->
+        <table class="header-table">
+            <tr>
+                <th>
+                    <h1 style="color: rgb(68, 88, 95); margin: 0; font-size: 24px;">
+                        Композиционные материалы
+                    </h1>
+                    <p style="color: rgb(68, 88, 95); margin: 10px 0 0 0; font-size: 18px;">
+                        Прогнозное значение параметра «Соотношение матрица-наполнитель»
+                    </p>
+                    <p style="color: rgb(68, 88, 95); margin: 10px 0 0 0; font-size: 16px;">
+                        Заполните ячейки и нажмите "Рассчитать"
+                    </p>
+                </th>
+            </tr>
+        </table>
+
+        <!-- Форма -->
+        <form action="" method="post">
+            <table class="form-table">
+                <!-- Параметры 1-12 -->
+                <tr>
+                    <td class="text-rgb(68, 88, 95)">
+                        <label for="param1">Плотность, кг/м³</label>
+                    </td>
+                    <td>
+                        <input type="number" name="param1" id="param1" 
+                               placeholder="Например: 1850.5" step="0.01" required>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="text-rgb(68, 88, 95)">
+                        <label for="param2">Модуль упругости, ГПа</label>
+                    </td>
+                    <td>
+                        <input type="number" name="param2" id="param2" 
+                               placeholder="Например: 125.345" step="0.001" required>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="text-rgb(68, 88, 95)">
+                        <label for="param3">Количество отвердителя, м.%</label>
+                    </td>
+                    <td>
+                        <input type="number" name="param3" id="param3" 
+                               placeholder="Например: 30.5" step="0.1" required>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="text-rgb(68, 88, 95)">
+                        <label for="param4">Содержание эпоксидных групп, %_2</label>
+                    </td>
+                    <td>
+                        <input type="number" name="param4" id="param4" 
+                               placeholder="Например: 25.7" step="0.1" required>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="text-rgb(68, 88, 95)">
+                        <label for="param5">Температура вспышки, С_2</label>
+                    </td>
+                    <td>
+                        <input type="number" name="param5" id="param5" 
+                               placeholder="Например: 280.5" step="0.1" required>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="text-rgb(68, 88, 95)">
+                        <label for="param6">Поверхностная плотность, г/м²</label>
+                    </td>
+                    <td>
+                        <input type="number" name="param6" id="param6" 
+                               placeholder="Например: 350.2" step="0.1" required>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="text-rgb(68, 88, 95)">
+                        <label for="param7">Модуль упругости при растяжении, ГПа</label>
+                    </td>
+                    <td>
+                        <input type="number" name="param7" id="param7" 
+                               placeholder="Например: 85.234" step="0.001" required>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="text-rgb(68, 88, 95)">
+                        <label for="param8">Прочность при растяжении, МПа</label>
+                    </td>
+                    <td>
+                        <input type="number" name="param8" id="param8" 
+                               placeholder="Например: 1200.5" step="0.1" required>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="text-rgb(68, 88, 95)">
+                        <label for="param9">Потребление смолы, г/м²</label>
+                    </td>
+                    <td>
+                        <input type="number" name="param9" id="param9" 
+                               placeholder="Например: 180.3" step="0.1" required>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="text-rgb(68, 88, 95)">
+                        <label for="param10">Угол нашивки, град</label>
+                    </td>
+                    <td>
+                        <input type="number" name="param10" id="param10" 
+                               placeholder="Например: 45.0" step="0.1" required>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="text-rgb(68, 88, 95)">
+                        <label for="param11">Шаг нашивки</label>
+                    </td>
+                    <td>
+                        <input type="number" name="param11" id="param11" 
+                               placeholder="Например: 3.5" step="0.01" required>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="text-rgb(68, 88, 95)">
+                        <label for="param12">Плотность нашивки</label>
+                    </td>
+                    <td>
+                        <input type="number" name="param12" id="param12" 
+                               placeholder="Например: 0.85" step="0.01" required>
+                    </td>
+                </tr>
+            </table>
+
+            <button type="submit" class="submit-btn">Рассчитать</button>
+        </form>
+
+        <!-- Результаты -->
+        <div class="result-container">
+            <h2>Результат прогноза:</h2>
+            
+            {% if message %}
+                <div class="result-value">{{ message }}</div>
+                
+                {% if prediction_percent %}
+                <div class="percentage-container">
+                    <div class="percentage-title">Процентное соотношение:</div>
+                    
+                    <div class="percentage-bars">
+                        <div class="matrix-bar" style="width: {{ prediction_percent|round(1) }}%">
+                            {{ prediction_percent|round(1) }}%
+                        </div>
+                        <div class="filler-bar" style="width: {{ (100 - prediction_percent)|round(1) }}%">
+                            {{ (100 - prediction_percent)|round(1) }}%
+                        </div>
+                    </div>
+                    
+                    <div class="percentage-labels">
+                        <div class="matrix-label">
+                            Матрица: {{ prediction_percent|round(1) }}%
+                        </div>
+                        <div class="filler-label">
+                            Наполнитель: {{ (100 - prediction_percent)|round(1) }}%
+                        </div>
+                    </div>
+                    
+                    <div class="explanation">
+                        <p>Для соотношения <strong>{{ prediction_value|round(3) }} : 1</strong>:</p>
+                        <p>• Матрица составляет <strong>{{ prediction_percent|round(1) }}%</strong> от общего объёма</p>
+                        <p>• Наполнитель составляет <strong>{{ (100 - prediction_percent)|round(1) }}%</strong> от общего объёма</p>
+                    </div>
+                </div>
+                {% endif %}
+            {% else %}
+                <div class="result-value">Введите данные и нажмите "Рассчитать"</div>
+            {% endif %}
+            
+            {% if error %}
+                <div class="error-message">
+                    <strong>Ошибка:</strong> {{ error }}
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <script>
+        // Ваш JavaScript код остается тот же
+        document.querySelector('form').addEventListener('submit', function(e) {
+            const inputs = this.querySelectorAll('input[required]');
+            let isValid = true;
+            
+            inputs.forEach(input => {
+                if (!input.value.trim()) {
+                    input.style.borderColor = '#ff4444';
+                    input.style.boxShadow = '0 0 10px rgba(255, 68, 68, 0.5)';
+                    isValid = false;
+                } else {
+                    input.style.borderColor = '#77a6b5';
+                }
+            });
+            
+            if (!isValid) {
+                e.preventDefault();
+                alert('Пожалуйста, заполните все обязательные поля!');
+            }
+        });
+        
+        document.querySelectorAll('input').forEach(input => {
+            input.addEventListener('input', function() {
+                this.style.borderColor = '#77a6b5';
+                this.style.boxShadow = 'none';
+            });
+        });
+        
+        document.querySelectorAll('input[type="number"]').forEach(input => {
+            input.addEventListener('blur', function() {
+                if (this.value) {
+                    this.value = this.value.replace(',', '.');
+                    const num = parseFloat(this.value);
+                    if (!isNaN(num)) {
+                        // Округляем до 2 знаков после запятой
+                        this.value = num.toFixed(2);
+                    }
+                }
+            });
+        });
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            const firstInput = document.querySelector('input[type="number"]');
+            if (firstInput) {
+                firstInput.focus();
+            }
+        });
+    </script>
+</body>
+</html>
