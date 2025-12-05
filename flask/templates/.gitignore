@@ -1,0 +1,107 @@
+# ==================== PYTHON ====================
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdk/
+var/
+wheels/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# ==================== ВИРТУАЛЬНЫЕ ОКРУЖЕНИЯ ====================
+# Virtual environments
+venv/
+env/
+ENV/
+env.bak/
+venv.bak/
+pythonenv*
+
+# ==================== FLASK ====================
+# Flask instance folders
+instance/
+.webassets-cache
+
+# ==================== МОДЕЛИ МАШИННОГО ОБУЧЕНИЯ ====================
+# НЕ загружайте модели на GitHub! Они слишком большие
+saved_models/
+*.h5
+*.keras
+*.pkl
+*.joblib
+*.pb
+variables/
+assets/
+saved_model.pb
+
+# ==================== VS CODE ====================
+.vscode/
+*.code-workspace
+.history/
+
+# ==================== ОПЕРАЦИОННЫЕ СИСТЕМЫ ====================
+# Windows
+[Dd]esktop.ini
+Thumbs.db
+*.lnk
+
+# macOS
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+[Tt]humbs.db
+
+# Linux
+*~
+
+# ==================== БАЗЫ ДАННЫХ ====================
+*.db
+*.sqlite
+*.sqlite3
+
+# ==================== ЛОГИ ====================
+*.log
+logs/
+
+# ==================== ВРЕМЕННЫЕ ФАЙЛЫ ====================
+*.tmp
+*.temp
+*.swp
+*.swo
+*~
+
+# ==================== СЕКРЕТЫ И КОНФИГУРАЦИИ ====================
+# Не добавляйте файлы с паролями и ключами!
+*.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+secrets.yml
+config.yml
+
+# ==================== ПРОЧЕЕ ====================
+# Файлы проекта
+.idea/
+*.iml
+*.ipynb_checkpoints
+
+# Docker
+docker-compose.override.yml
